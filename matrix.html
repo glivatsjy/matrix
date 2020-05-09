@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script language="javascript">
+        function changeXY(ctx, numMatrix, sizeCell, x, y) {
+            ctx.strokeRect(x * sizeCell - sizeCell, y * sizeCell - sizeCell, sizeCell, sizeCell);
+            ctx.fillRect(x * sizeCell - sizeCell + 1, y * sizeCell - sizeCell + 1, sizeCell - 2, sizeCell - 2);
+            let new_y = numMatrix - x + 1;
+            x = y;
+            y = new_y;
+            return {
+                x: x,
+                y: y
+            };
+        }
+
+        function changeMatrix(x, y) {
+            let select = document.getElementById("numM");
+            let numMatrix = Number(select.value);
+            let sizeCell = 20;
+            let matrix = document.getElementById('matrix');
+            let ctx = matrix.getContext("2d");
+            let imgd = ctx.getImageData(x, y, 1, 1);
+            let pix = imgd.data;
+            let new_y;
+            let xy;
+            x = Math.floor(x / sizeCell) + 1;
+            y = Math.floor(y / sizeCell) + 1;
+            //alert(pix[0] + " " + pix[1] + " " + pix[2] + " " + pix[3]);
+            if (x <= numMatrix && y <= numMatrix) {
+                if (pix[0] == 255 && pix[2] == 255) {
+                    ctx.fillStyle = "Gray";
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                    x = xy.x;
+                    y = xy.y;
+                    ctx.fillStyle = "Yellow";
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                    x = xy.x;
+                    y = xy.y;
+                    ctx.fillStyle = "Yellow";
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                    x = xy.x;
+                    y = xy.y;
+                    ctx.fillStyle = "Yellow";
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                } else if (pix[0] == 128 && pix[2] == 128) {
+                    ctx.fillStyle = "White";
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                    x = xy.x;
+                    y = xy.y;
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                    x = xy.x;
+                    y = xy.y;
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                    x = xy.x;
+                    y = xy.y;
+                    xy = changeXY(ctx, numMatrix, sizeCell, x, y);
+                }
+            }
+        };
+
+        function сreateMatrix() {
+            let select = document.getElementById("numM");
+            let numMatrix = Number(select.value);
+            let sizeCell = 20;
+            let matrix = document.getElementById('matrix');
+            let ctx = matrix.getContext("2d");
+            ctx.clearRect(0, 0, 500, 500);
+            ctx.strokeRect(0, 0, 500, 500);
+            for (let x = 1; x <= numMatrix; x++) {
+                for (let y = 1; y <= numMatrix; y++) {
+                    ctx.fillStyle = "White";
+                    ctx.strokeRect(x * sizeCell - sizeCell, y * sizeCell - sizeCell, sizeCell, sizeCell);
+                    ctx.fillRect(x * sizeCell - sizeCell + 1, y * sizeCell - sizeCell + 1, sizeCell - 2, sizeCell - 2);
+                }
+            }
+            if (numMatrix % 2 > 0) {
+                x = Math.floor(numMatrix / 2) + 1;
+                y = Math.floor(numMatrix / 2) + 1;
+                ctx.fillStyle = "Black";
+                changeXY(ctx, numMatrix, sizeCell, x, y);
+            }
+        };
+    </script>
+    <metacharset="utf-8">
+        <title>Matrix</title>
+</head>
+
+<body>
+    <p>Размер матрицы</p>
+    <p></p><select id="numM" size="1">
+        <option value="1">1 x 1</option>
+        <option value="2">2 x 2</option>
+        <option value="3">3 x 3</option>
+        <option selected value="4">4 x 4</option>
+        <option value="5">5 x 5</option>
+        <option value="6">6 x 6</option>
+        <option value="7">7 x 7</option>
+        <option value="8">8 x 8</option>
+        <option value="9">9 x 9</option>
+        <option value="10">10 x 10</option>
+        <option value="11">11 x 11</option>
+        <option value="12">12 x 12</option>
+        <option value="13">13 x 13</option>
+        <option value="14">14 x 14</option>
+        <option value="15">15 x 15</option>
+        <option value="20">20 x 20</option>
+        <option value="25">25 x 25</option>
+    </select></p>
+    <input id="butt" type="button" value="Matrix" OnClick="сreateMatrix()">
+    <br><br>
+    <canvas id="matrix" width="500" height="500" style="margin-left: 20px;" onclick="changeMatrix(event.offsetX,event.offsetY)"></canvas>
+</body>
+
+</html>
